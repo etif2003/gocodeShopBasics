@@ -1,6 +1,7 @@
 import RangeSlider from "./RangeSlider";
 import { SortSection } from "./SortSection";
 
+
 export const NavSection = () => {
   return (
     <nav className="product-filter">

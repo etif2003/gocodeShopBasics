@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ShopContext } from "../ShopContext";
 import { FilterSortComp } from "./FilterSortComp";
+import CartDrawer from "./CartDrawer";
 
 export const SortSection = () => {
   const { categories, setSelectedCategory, setSortType } =
@@ -14,17 +15,20 @@ export const SortSection = () => {
   ];
 
   return (
-    <div className="sort">
-      <FilterSortComp
-        onSelect={setSelectedCategory}
-        label={"Filter by:"}
-        listOfOptions={categories}
-      />
-      <FilterSortComp
-        onSelect={setSortType}
-        label={"Sort by:"}
-        listOfOptions={sortOptions}
-      />
-    </div>
+    <>
+      <div className="sort">
+        <FilterSortComp
+          onSelect={setSelectedCategory}
+          label={"Filter by:"}
+          listOfOptions={categories}
+        />
+        <FilterSortComp
+          onSelect={setSortType}
+          label={"Sort by:"}
+          listOfOptions={sortOptions}
+        />
+      </div>
+      <CartDrawer />
+    </>
   );
 };

@@ -8,10 +8,11 @@ export const ProductsSection = () => {
     <section className="products">
       {filteredProducts.map((product) => (
         <ProductCard
-          itemName={product.title}
-          price={product.price}
-          img={product.image}
-          id={product.id}
+          // itemName={product.title}
+          // price={product.price}
+          // img={product.image}
+          // id={product.id}
+          product={product}
         />
       ))}
     </section>

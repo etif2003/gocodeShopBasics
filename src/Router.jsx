@@ -3,6 +3,7 @@ import App from "./App";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
 import { useEffect, useState } from "react";
 import { ShopContext } from "./ShopContext";
+import StickyHeadTable from "./pages/ManageProductsPage";
 
 export const Router = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +14,15 @@ export const Router = () => {
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [sortType, setSortType] = useState("");
 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // אחרי כל שינוי בסל
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   useEffect(() => {
     const handleProducts = async () => {
@@ -127,34 +136,62 @@ export const Router = () => {
   //   }
   // };
 
-  const handleClickBtn = (op, itemId, itemName, setCount) => {
-    if (op === "-") {
-      setCount((prev) => (prev > 0 ? prev - 1 : prev));
+  // const handleClickBtn = (op, product, setCount) => {
+  //   if (op === "-") {
+  //     setCount((prev) => (prev > 0 ? prev - 1 : prev));
 
-      setCart((prevCart) => {
-        const item = prevCart.find((p) => p.pName === itemName);
+  //     setCart((prevCart) => {
+  //       const item = prevCart.find((p) => p.id === product.id);
+  //       if (!item) return prevCart;
+
+  //       return prevCart
+  //         .map((p) =>
+  //           p.id === product.id ? { ...p, amount: p.amount - 1 } : p
+  //         )
+  //         .filter((p) => p.amount > 0);
+  //     });
+  //   } else if (op === "+") {
+  //     setCount((prev) => prev + 1);
+
+  //     setCart((prevCart) => {
+  //       const item = prevCart.find((p) => p.id === product.id);
+  //       if (item) {
+  //         return prevCart.map((p) =>
+  //           p.id === product.id ? { ...p, amount: p.amount + 1 } : p
+  //         );
+  //       } else {
+  //         return [...prevCart, { ...product, amount: 1 }];
+  //       }
+  //     });
+  //   }
+  // };
+
+  const handleClickBtn = (op, product) => {
+    setCart((prevCart) => {
+      const item = prevCart.find((p) => p.id === product.id);
+
+      if (op === "+") {
+        if (item) {
+          return prevCart.map((p) =>
+            p.id === product.id ? { ...p, amount: p.amount + 1 } : p
+          );
+        } else {
+          return [...prevCart, { ...product, amount: 1 }];
+        }
+      }
+
+      if (op === "-") {
         if (!item) return prevCart;
 
         return prevCart
           .map((p) =>
-            p.pName === itemName ? { ...p, amount: p.amount - 1 } : p
+            p.id === product.id ? { ...p, amount: p.amount - 1 } : p
           )
           .filter((p) => p.amount > 0);
-      });
-    } else if (op === "+") {
-      setCount((prev) => prev + 1);
+      }
 
-      setCart((prevCart) => {
-        const item = prevCart.find((p) => p.pName === itemName);
-        if (item) {
-          return prevCart.map((p) =>
-            p.pName === itemName ? { ...p, amount: p.amount + 1 } : p
-          );
-        } else {
-          return [...prevCart, { pName: itemName, amount: 1 }];
-        }
-      });
-    }
+      return prevCart;
+    });
   };
 
   // const handleFilterProductsByRange = (range) => {
@@ -174,8 +211,12 @@ export const Router = () => {
       path: "/products/:productId",
       Component: ProductDetailsPage,
     },
+    {
+      path: "/manageProducts",
+      Component: StickyHeadTable,
+    },
   ]);
-  
+
   return (
     <ShopContext.Provider
       value={{
@@ -186,6 +227,7 @@ export const Router = () => {
         setPriceRange,
         setSortType,
         handleClickBtn,
+        cart,
       }}
     >
       <RouterProvider router={router} />
