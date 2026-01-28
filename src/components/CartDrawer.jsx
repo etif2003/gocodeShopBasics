@@ -20,12 +20,17 @@ import { ShopContext } from "../ShopContext";
 import { AddToCart } from "./AddToCart";
 
 export default function CartDrawer() {
-  const { cart, handleClickBtn } = useContext(ShopContext);
+  const { setCart, cart, handleClickBtn } = useContext(ShopContext);
 
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (isOpen) => () => {
     setOpen(isOpen);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    setOpen(false);
   };
 
   const totalPrice = cart.reduce(
@@ -55,19 +60,21 @@ export default function CartDrawer() {
             }}
           >
             <Typography variant="h6">cart ({cart.length})</Typography>
+
+            <IconButton onClick={toggleDrawer(false)}>
+              <CloseIcon />
+            </IconButton>
           </Box>
           <Divider />
-
-     
 
           <List sx={{ flexGrow: 1, overflowY: "auto", p: 0 }}>
             {cart.length === 0 ? (
               <Typography sx={{ textAlign: "center", mt: 5, color: "gray" }}>
-               Your cart is empty
+                Your cart is empty
               </Typography>
             ) : (
               cart.map((item) => (
-                <React.Fragment key={item.id}>
+                <React.Fragment key={item._id}>
                   <ListItem
                     sx={{ py: 2, display: "flex", alignItems: "center" }}
                   >
@@ -92,9 +99,7 @@ export default function CartDrawer() {
                         alignItems: "center",
                       }}
                     >
-                      <AddToCart
-                        product={item}
-                      />
+                      <AddToCart product={item} />
                     </Box>
                   </ListItem>
                   <Divider />
@@ -125,6 +130,7 @@ export default function CartDrawer() {
               fullWidth
               size="large"
               sx={{ py: 1.5, fontSize: "1.1rem" }}
+              onClick={clearCart}
             >
               Proceed to payment
             </Button>

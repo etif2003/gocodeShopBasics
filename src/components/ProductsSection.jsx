@@ -1,9 +1,15 @@
 import { useContext } from "react";
 import { ProductCard } from "./ProductCard";
 import { ShopContext } from "../ShopContext.js";
+import { useProducts } from "../hooks/useProducts.js";
 
 export const ProductsSection = () => {
-  const { filteredProducts } = useContext(ShopContext);
+  const { data: filteredProducts, isLoading, isError } = useProducts();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading products</div>;
+
+  // const { filteredProducts } = useContext(ShopContext);
   return (
     <section className="products">
       {filteredProducts.map((product) => (
@@ -11,7 +17,7 @@ export const ProductsSection = () => {
           // itemName={product.title}
           // price={product.price}
           // img={product.image}
-          // id={product.id}
+          // id={product._id}
           product={product}
         />
       ))}

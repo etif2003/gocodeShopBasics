@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 export const ProductCard = (props) => {
 
   const navigate = useNavigate();
-  const handleClickImage = () => navigate(`/products/${props.product.id}`);
+  const handleClickImage = () => navigate(`/products/${props.product._id}`);
 
   return (
     <div className="product-card">
@@ -15,7 +15,7 @@ export const ProductCard = (props) => {
       </div>
       <div>
         <AddToCart
-          // itemId={props.id}
+          // itemId={props._id}
           // itemName={props.itemName}
           // price={product.price}
           product={props.product}
@@ -24,7 +24,7 @@ export const ProductCard = (props) => {
       <div className="product-info">
         {/* <h5>{props.itemName}</h5>
         <h6>{props.price}</h6> */}
-        <h5>{props.product.itemName}</h5>
+        <h5>{props.product.title}</h5>
         <h6>{props.product.price}$</h6>
       </div>
     </div>

@@ -6,13 +6,21 @@ import { useContext } from "react";
 import { ShopContext } from "../ShopContext";
 import { useEffect } from "react";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { handleProducts } from "../api/products-functions";
 
 function rangeValuetext(rangeValue) {
   return `${rangeValue}$`;
 }
 
 export default function RangeSlider() {
-  const { allProducts, setPriceRange } = useContext(ShopContext);
+  const { data: allProducts = [] } = useQuery({
+    queryKey: ["all-products"],
+    queryFn: handleProducts,
+  });
+  const { setPriceRange } = useContext(ShopContext);
+
+  // const { allProducts, setPriceRange } = useContext(ShopContext);
 
   const prices = allProducts.map((p) => p.price);
   const minPrice = prices.length ? Math.min(...prices) : 0;

@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { ShopContext } from "../ShopContext";
 import { FilterSortComp } from "./FilterSortComp";
-import CartDrawer from "./CartDrawer";
 
 export const SortSection = () => {
   const { categories, setSelectedCategory, setSortType } =
@@ -28,7 +27,6 @@ export const SortSection = () => {
           listOfOptions={sortOptions}
         />
       </div>
-      <CartDrawer />
     </>
   );
 };

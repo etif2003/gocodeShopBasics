@@ -7,7 +7,7 @@ import { IconButton } from "@mui/material";
 export const AddToCart = ({ product }) => {
   const { cart, handleClickBtn } = useContext(ShopContext);
 
-  const cartItem = cart.find((p) => p.id === product.id);
+  const cartItem = cart.find((p) => p._id === product._id);
   const count = cartItem ? cartItem.amount : 0;
 
   return (
