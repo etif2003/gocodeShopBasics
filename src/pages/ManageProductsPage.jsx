@@ -17,11 +17,16 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-
-import { useContext } from "react";
-import { ShopContext } from "../ShopContext";
 import ProductForm from "../components/manager/ProductForm";
 import { Link } from "react-router";
+import { useProducts } from "../hooks/useProducts";
+import {
+  addProduct,
+  deleteProduct,
+  handleProducts,
+  updateProduct,
+} from "../api/products-functions";
+import { useQuery } from "@tanstack/react-query";
 
 const initialProducts = [
   {
@@ -150,8 +155,7 @@ const initialProducts = [
   },
   {
     id: 13,
-    title:
-      "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin",
+    title: "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin",
     price: 599,
     description:
       "21. 5 inches Full HD (1920 x 1080) widescreen IPS display And Radeon free Sync technology. No compatibility for VESA Mount Refresh Rate: 75Hz - Using HDMI port Zero-frame design | ultra-thin | 4ms response time | IPS panel Aspect ratio - 16: 9. Color Supported - 16. 7 million colors. Brightness - 250 nit Tilt angle -5 degree to 15 degree. Horizontal viewing angle-178 degree. Vertical viewing angle-178 degree 75 hertz",
@@ -246,10 +250,14 @@ const columns = [
 ];
 
 export default function ManageProductsPage() {
-  // const { allProducts } = useContext(ShopContext);
+  const { data: allProducts = [] } = useQuery({
+    queryKey: ["all-products"],
+    queryFn: handleProducts,
+  });
 
-  const [allProducts, setAllProducts] = React.useState(initialProducts);
+  
 
+  // const [allProducts, setAllProducts] = React.useState(initialProducts);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -263,7 +271,10 @@ export default function ManageProductsPage() {
     setPage(0);
   };
 
-  const visibleRows = allProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const visibleRows = allProducts.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
   // modal state
   const [open, setOpen] = React.useState(false);
@@ -289,13 +300,15 @@ export default function ManageProductsPage() {
       if (mode === "add") {
         const created = await addProduct(payload); // POST
         // אם השרת מחזיר מוצר עם id/_id, נכניס לטבלה:
-        setAllProducts((prev) => [created, ...prev]);
+        // setAllProducts((prev) => [created, ...prev]);
       } else {
         const id = selected.id ?? selected._id;
         const updated = await updateProduct(id, payload); // PUT
-        setAllProducts((prev) =>
-          prev.map((p) => ((p.id ?? p._id) === (updated.id ?? updated._id) ? updated : p))
-        );
+        // setAllProducts((prev) =>
+        //   prev.map((p) =>
+        //     (p.id ?? p._id) === (updated.id ?? updated._id) ? updated : p,
+        //   ),
+        // );
       }
       setOpen(false);
     } catch (e) {
@@ -316,27 +329,42 @@ export default function ManageProductsPage() {
     }
   };
 
-
   return (
     <div>
-      <Link to={"/"}> <ArrowBackIcon className="link-back-home" /></Link>
-      <div style={{ margin: 35, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ fontSize: "32px", fontWeight: 500 }}>
-          Admin - Products
-        </h2>
-        <Button style={{ maxHeight: 53, padding: "6px 16px" }} variant="contained" startIcon={<AddIcon />} onClick={openAdd}>
+      <Link to={"/"}>
+        {" "}
+        <ArrowBackIcon className="link-back-home" />
+      </Link>
+      <div
+        style={{
+          margin: "25px 35px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2 style={{ fontSize: "32px", fontWeight: 500 }}>Admin - Products</h2>
+        <Button
+          style={{ maxHeight: 53, padding: "6px 16px" }}
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={openAdd}
+        >
           Add
         </Button>
       </div>
 
-
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 750 }}>
-          <Table stickyHeader aria-label="admin products table" >
+        <TableContainer sx={{ maxHeight: 485 }}>
+          <Table stickyHeader aria-label="admin products table">
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
                     {column.label}
                   </TableCell>
                 ))}
@@ -350,13 +378,22 @@ export default function ManageProductsPage() {
                     let value;
 
                     if (column.id === "rate") value = product.rating?.rate;
-                    else if (column.id === "count") value = product.rating?.count;
+                    else if (column.id === "count")
+                      value = product.rating?.count;
                     else value = product[column.id];
 
                     if (column.id === "image") {
                       return (
                         <TableCell key={column.id}>
-                          {value ? <img src={value} alt={product.title} style={{ width: 60 }} /> : "-"}
+                          {value ? (
+                            <img
+                              src={value}
+                              alt={product.title}
+                              style={{ width: 50 }}
+                            />
+                          ) : (
+                            "-"
+                          )}
                         </TableCell>
                       );
                     }
@@ -365,12 +402,18 @@ export default function ManageProductsPage() {
                       return (
                         <TableCell key={column.id} align="right">
                           <Tooltip title="Edit">
-                            <IconButton style={{ color: "#1976d2" }} onClick={() => openEdit(product)}>
+                            <IconButton
+                              style={{ color: "#1976d2" }}
+                              onClick={() => openEdit(product)}
+                            >
                               <EditIcon />
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Delete">
-                            <IconButton style={{ color: "red" }} onClick={() => handleDelete(product)}>
+                            <IconButton
+                              style={{ color: "red" }}
+                              onClick={() => handleDelete(product)}
+                            >
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
