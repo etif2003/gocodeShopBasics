@@ -94,6 +94,7 @@ video {
   font: inherit;
   vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -108,17 +109,21 @@ nav,
 section {
   display: block;
 }
+
 body {
   line-height: 1;
 }
+
 ol,
 ul {
   list-style: none;
 }
+
 blockquote,
 q {
   quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -126,6 +131,7 @@ q:after {
   content: ’’;
   content: none;
 }
+
 /* remember to define visible focus styles! 
 :focus{
   outline:?????;
@@ -135,6 +141,7 @@ q:after {
 ins {
   text-decoration: none;
 }
+
 del {
   text-decoration: line-through;
 }
@@ -179,6 +186,11 @@ h6 {
 .product-filter {
   display: flex;
   padding: 30px 0;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
 }
 
 .sort {
@@ -236,9 +248,10 @@ label {
   margin-top: 20px;
 }
 
-.cartBtn {
-  width: 30px;
-  height: 30px;
+.cartIcon {
+  border-radius: 50% !important;
+  min-width: 40px !important;
+  min-height: 40px;
 }
 
 .addToCartBtns p {
@@ -262,7 +275,8 @@ label {
   background: white;
   border-radius: 20px;
   padding: 70px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* צל עדין */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* צל עדין */
 }
 
 .product-card-page img {
@@ -282,7 +296,8 @@ label {
 .product-card-details h1 {
   font-size: 28px;
   font-weight: 300;
-  flex: 0; /* או פשוט למחוק את השורה */
+  flex: 0;
+  /* או פשוט למחוק את השורה */
 }
 
 .bold-title {
@@ -323,6 +338,10 @@ label {
   padding: 4px;
 }
 
+.link-back-home {
+    margin: 40px 0 0 15px;
+    color:#1976D2 !important;
+}
 
 @media (max-width: 920px) {
   .product-card {
