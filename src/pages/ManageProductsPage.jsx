@@ -15,9 +15,13 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+
 import { useContext } from "react";
 import { ShopContext } from "../ShopContext";
 import ProductForm from "../components/manager/ProductForm";
+import { Link } from "react-router";
 
 const initialProducts = [
   {
@@ -232,13 +236,13 @@ const initialProducts = [
 const columns = [
   { id: "id", label: "Id" },
   { id: "title", label: "Title" },
-  { id: "price", label: "Price" },
+  { id: "price", label: "Price", align: "center" },
   { id: "description", label: "Description" },
   { id: "category", label: "Category" },
   { id: "image", label: "Image" },
-  { id: "rate", label: "Rate", align: "right" },
-  { id: "count", label: "Count", align: "right" },
-  { id: "actions", label: "Actions", align: "right" },
+  { id: "rate", label: "Rating (Rate)", align: "center", minWidth: 95 },
+  { id: "count", label: "Rating (Count)", align: "center", minWidth: 95 },
+  { id: "actions", label: "Actions", align: "center" },
 ];
 
 export default function ManageProductsPage() {
@@ -315,11 +319,12 @@ export default function ManageProductsPage() {
 
   return (
     <div>
-      <div style={{  margin: 35, display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <Link to={"/"}> <ArrowBackIcon className="link-back-home" /></Link>
+      <div style={{ margin: 35, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ fontSize: "32px", fontWeight: 500 }}>
           Admin - Products
         </h2>
-        <Button style={{maxHeight:30}} variant="contained" startIcon={<AddIcon />} onClick={openAdd}>
+        <Button style={{ maxHeight: 53, padding: "6px 16px" }} variant="contained" startIcon={<AddIcon />} onClick={openAdd}>
           Add
         </Button>
       </div>
@@ -327,7 +332,7 @@ export default function ManageProductsPage() {
 
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 750 }}>
-          <Table stickyHeader aria-label="admin products table">
+          <Table stickyHeader aria-label="admin products table" >
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
@@ -351,7 +356,7 @@ export default function ManageProductsPage() {
                     if (column.id === "image") {
                       return (
                         <TableCell key={column.id}>
-                          {value ? <img src={value} alt={product.title} style={{ width: 50 }} /> : "-"}
+                          {value ? <img src={value} alt={product.title} style={{ width: 60 }} /> : "-"}
                         </TableCell>
                       );
                     }
@@ -360,12 +365,12 @@ export default function ManageProductsPage() {
                       return (
                         <TableCell key={column.id} align="right">
                           <Tooltip title="Edit">
-                            <IconButton onClick={() => openEdit(product)}>
+                            <IconButton style={{ color: "#1976d2" }} onClick={() => openEdit(product)}>
                               <EditIcon />
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Delete">
-                            <IconButton onClick={() => handleDelete(product)}>
+                            <IconButton style={{ color: "red" }} onClick={() => handleDelete(product)}>
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
