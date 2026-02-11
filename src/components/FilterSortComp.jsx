@@ -3,8 +3,11 @@ export const FilterSortComp = (props) => {
 
   return (
     <div className="collection-sort">
-      <label>{label}</label>
-      <select onChange={(event) => onSelect(event.target.value)}>
+      <label className="select-label">{label}</label>
+      <select
+        className="custom-select"
+        onChange={(event) => onSelect(event.target.value)}
+      >
         {listOfOptions.map((opt) => (
           <option value={opt}>{opt}</option>
         ))}

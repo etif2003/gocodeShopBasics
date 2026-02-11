@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-
 export const NavSection = () => {
   return (
     <nav className="product-filter">
@@ -17,13 +16,18 @@ export const NavSection = () => {
           <SortSection />
           <RangeSlider />
         </div>
-
-        <CartDrawer />
-        <Tooltip title="Admin">
-          <IconButton component={Link} to="/manageProducts" aria-label="Admin">
-            <ManageAccountsIcon/>
-          </IconButton>
-        </Tooltip>
+        <div className="homeBtns">
+          <CartDrawer />
+          <Tooltip title="Admin">
+            <IconButton
+              component={Link}
+              to="/manageProducts"
+              aria-label="Admin"
+            >
+              <ManageAccountsIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
       </div>
     </nav>
   );

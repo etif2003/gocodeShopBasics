@@ -12,6 +12,7 @@ import {
   ListItemAvatar,
   Avatar,
   ListItemText,
+  Snackbar,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
@@ -25,6 +26,7 @@ export default function CartDrawer() {
   const { setCart, cart, handleClickBtn } = useContext(ShopContext);
 
   const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const toggleDrawer = (isOpen) => () => {
     setOpen(isOpen);
@@ -33,17 +35,26 @@ export default function CartDrawer() {
   const clearCart = () => {
     setCart([]);
     setOpen(false);
+    // alert("Payment succeeded");
+    setOpenSnackbar(true);
   };
 
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.amount,
-    0
+    0,
   );
 
   return (
     <>
-      <Button onClick={toggleDrawer(true)} className="cartIcon"><ShoppingCartIcon/></Button>
-
+      <Button onClick={toggleDrawer(true)} className="cartIcon">
+        <ShoppingCartIcon />
+      </Button>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        message="Payment succeeded"
+        onClose={() => setOpenSnackbar(false)}
+      />
       <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
         <Box
           sx={{
@@ -133,6 +144,7 @@ export default function CartDrawer() {
               size="large"
               sx={{ py: 1.5, fontSize: "1.1rem" }}
               onClick={clearCart}
+              disabled={cart.length<=0}
             >
               Proceed to payment
             </Button>

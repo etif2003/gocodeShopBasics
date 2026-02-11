@@ -3,3 +3,37 @@
   width: 100px;
   border-radius: 50%;
 }
+
+.select-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+.custom-select {
+  padding: 7px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.custom-select:hover {
+  border-color: #999;
+}
+
+/* focus */
+.custom-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.product-filter .homeBtns {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
