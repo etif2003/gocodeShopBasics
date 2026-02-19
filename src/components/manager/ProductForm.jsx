@@ -1,102 +1,203 @@
 import * as React from "react";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Button,
-    Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Stack,
 } from "@mui/material";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const emptyForm = {
-    title: "",
-    price: "",
-    description: "",
-    category: "",
-    image: "",
-    rate: "",
-    count: "",
+  title: "",
+  price: "",
+  description: "",
+  category: "",
+  image: "",
+  rate: "",
+  count: "",
 };
 
-export default function ProductForm({ open, mode, initialProduct, onClose, onSubmit }) {
-    const isEdit = mode === "edit";
+export default function ProductForm({
+  open,
+  mode,
+  initialProduct,
+  onClose,
+  onSubmit,
+}) {
+  const isEdit = mode === "edit";
 
-    const [form, setForm] = React.useState(emptyForm);
+  const [form, setForm] = useState(emptyForm);
+  const [errors, setErrors] = useState({});
 
-    React.useEffect(() => {
-        if (!open) return;
+  useEffect(() => {
+    setErrors({});
+    if (!open) return;
 
-        if (isEdit && initialProduct) {
-            setForm({
-                title: initialProduct.title ?? "",
-                price: String(initialProduct.price ?? ""),
-                description: initialProduct.description ?? "",
-                category: initialProduct.category ?? "",
-                image: initialProduct.image ?? "",
-                rate: String(initialProduct.rating?.rate ?? ""),
-                count: String(initialProduct.rating?.count ?? ""),
-            });
-        } else {
-            setForm(emptyForm);
-        }
-    }, [open, isEdit, initialProduct]);
+    if (isEdit && initialProduct) {
+      setForm({
+        title: initialProduct.title ?? "",
+        price: String(initialProduct.price ?? ""),
+        description: initialProduct.description ?? "",
+        category: initialProduct.category ?? "",
+        image: initialProduct.image ?? "",
+        rate: String(initialProduct.rating?.rate ?? ""),
+        count: String(initialProduct.rating?.count ?? ""),
+      });
+    } else {
+      setForm(emptyForm);
+    }
+  }, [open, isEdit, initialProduct]);
 
-    const setField = (key) => (e) => setForm((p) => ({ ...p, [key]: e.target.value }));
+  const setField = (key) => (e) => {
+    setForm((p) => ({ ...p, [key]: e.target.value }));
+    setErrors((prev) => ({ ...prev, [key]: "" }));
+  };
 
-    const handleSubmit = () => {
-        // ולידציה בסיסית
-        if (!form.title.trim()) return alert("Title is required");
-        const priceNum = Number(form.price);
-        if (Number.isNaN(priceNum)) return alert("Price must be a number");
+  const handleSubmit = () => {
+    const newErrors = {};
 
-        const payload = {
-            title: form.title.trim(),
-            price: priceNum,
-            description: form.description.trim(),
-            category: form.category.trim(),
-            image: form.image.trim(),
-            rating: {
-                rate: form.rate === "" ? undefined : Number(form.rate),
-                count: form.count === "" ? undefined : Number(form.count),
-            },
-        };
+    if (!form.title.trim()) {
+      newErrors.title = "Title is required";
+    } else if (form.title.trim().length < 5) {
+      newErrors.title = "Title must be at least 5 letters";
+    }
 
-        // ניקוי undefined ב-rating כדי לא לשבור שרתים שלא מצפים לזה
-        if (payload.rating.rate === undefined && payload.rating.count === undefined) {
-            delete payload.rating;
-        } else {
-            if (payload.rating.rate !== undefined && Number.isNaN(payload.rating.rate)) return alert("Rate must be a number");
-            if (payload.rating.count !== undefined && Number.isNaN(payload.rating.count)) return alert("Count must be a number");
-        }
+    const priceNum = Number(form.price);
+    if (Number.isNaN(priceNum) || priceNum <= 0) {
+      newErrors.price = "Price must be a number greater than 0";
+    }
 
-        onSubmit(payload);
+    const rateNum = form.rate === "" ? undefined : Number(form.rate);
+    if (
+      rateNum !== undefined &&
+      (Number.isNaN(rateNum) || rateNum < 0 || rateNum > 10)
+    ) {
+      newErrors.rate = "Rate must be between 0-10";
+    }
+
+    const countNum = form.count === "" ? undefined : Number(form.count);
+    if (countNum !== undefined && (Number.isNaN(countNum) || countNum < 0)) {
+      newErrors.count = "Count must be a number";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
+    const payload = {
+      title: form.title.trim(),
+      price: priceNum,
+      description: form.description.trim(),
+      category: form.category.trim(),
+      image: form.image.trim(),
+      rating: {
+        rate: rateNum,
+        count: countNum,
+      },
     };
 
-    return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-            <DialogTitle>{isEdit ? "Update Product" : "Add Product"}</DialogTitle>
+    onSubmit(payload);
+  };
 
-            <DialogContent>
-                <Stack spacing={2} sx={{ mt: 1 }}>
-                    <TextField label="Title" value={form.title} onChange={setField("title")} fullWidth />
-                    <TextField label="Price" value={form.price} onChange={setField("price")} fullWidth />
-                    <TextField label="Description" value={form.description} onChange={setField("description")} fullWidth multiline minRows={3} />
-                    <TextField label="Category" value={form.category} onChange={setField("category")} fullWidth />
-                    <TextField label="Image URL" value={form.image} onChange={setField("image")} fullWidth />
-                    <Stack direction="row" spacing={2}>
-                        <TextField label="Rating Rate" value={form.rate} onChange={setField("rate")} fullWidth />
-                        <TextField label="Rating Count" value={form.count} onChange={setField("count")} fullWidth />
-                    </Stack>
-                </Stack>
-            </DialogContent>
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>{isEdit ? "Update Product" : "Add Product"}</DialogTitle>
 
-            <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button variant="contained" onClick={handleSubmit}>
-                    {isEdit ? "Save" : "Create"}
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
+      <DialogContent>
+        <Stack spacing={2} sx={{ mt: 1 }}>
+          <TextField
+            label="Title"
+            value={form.title}
+            onChange={setField("title")}
+            error={!!errors.title}
+            helperText={errors.title}
+          />
+          <TextField
+            label="Price"
+            type="number"
+            onKeyDown={(e) => {
+              if (
+                e.key === "e" ||
+                e.key === "E" ||
+                e.key === "+" ||
+                e.key === "-"
+              ) {
+                e.preventDefault();
+              }
+            }}
+            value={form.price}
+            onChange={setField("price")}
+            error={!!errors.price}
+            helperText={errors.price}
+          />
+          <TextField
+            label="Description"
+            value={form.description}
+            onChange={setField("description")}
+            multiline
+            minRows={3}
+          />
+          <TextField
+            label="Category"
+            value={form.category}
+            onChange={setField("category")}
+          />
+          <TextField
+            label="Image URL"
+            value={form.image}
+            onChange={setField("image")}
+          />
+          <Stack direction="row" spacing={2}>
+            <TextField
+              label="Rating Rate"
+              type="number"
+              onKeyDown={(e) => {
+                if (
+                  e.key === "e" ||
+                  e.key === "E" ||
+                  e.key === "+" ||
+                  e.key === "-"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              value={form.rate}
+              onChange={setField("rate")}
+              error={!!errors.rate}
+              helperText={errors.rate}
+            />
+            <TextField
+              label="Rating Count"
+              type="number"
+              onKeyDown={(e) => {
+                if (
+                  e.key === "e" ||
+                  e.key === "E" ||
+                  e.key === "+" ||
+                  e.key === "-"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              value={form.count}
+              onChange={setField("count")}
+              error={!!errors.count}
+              helperText={errors.count}
+            />
+          </Stack>
+        </Stack>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button variant="contained" onClick={handleSubmit}>
+          {isEdit ? "Save" : "Create"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }

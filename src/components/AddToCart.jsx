@@ -19,7 +19,6 @@ export const AddToCart = ({ product }) => {
         gap: "8px",
       }}
     >
-      {/* כפתור להפחתה */}
       <IconButton
         size="small"
         disabled={count <= 0}
@@ -28,10 +27,8 @@ export const AddToCart = ({ product }) => {
         <RemoveIcon />
       </IconButton>
 
-      {/* מספר */}
       <span style={{ minWidth: "20px", textAlign: "center" }}>{count}</span>
 
-      {/* כפתור להוספה */}
       <IconButton
         size="small"
         onClick={() => handleClickBtn("+", product)}

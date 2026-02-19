@@ -14,19 +14,17 @@ export const SortSection = () => {
   ];
 
   return (
-    <>
-      <div className="sort">
-        <FilterSortComp
-          onSelect={setSelectedCategory}
-          label={"Filter by:"}
-          listOfOptions={categories}
-        />
-        <FilterSortComp
-          onSelect={setSortType}
-          label={"Sort by:"}
-          listOfOptions={sortOptions}
-        />
-      </div>
-    </>
+    <div className="sort">
+      <FilterSortComp
+        onSelect={setSelectedCategory}
+        label={"Filter by:"}
+        listOfOptions={categories}
+      />
+      <FilterSortComp
+        onSelect={setSortType}
+        label={"Sort by:"}
+        listOfOptions={sortOptions}
+      />
+    </div>
   );
 };

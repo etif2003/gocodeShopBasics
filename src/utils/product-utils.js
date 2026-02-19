@@ -1,8 +1,4 @@
-// utils/productUtils.js
-
-/**
- * Transforms raw product data based on filtering and sorting criteria.
- */
+//  Transforms raw product data based on filtering and sorting criteria.
 export const transformProducts = (
   allData,
   { category, priceRange, sortType },

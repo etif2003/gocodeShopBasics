@@ -3,11 +3,12 @@ import { ShopContext } from "../ShopContext.js";
 import { useContext } from "react";
 import { fetchSingleProduct } from "../api/products-functions.js";
 import { useQuery } from "@tanstack/react-query";
+import { Loading } from "../components/Loading.jsx";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { LoadError } from "../components/LoadError.jsx";
 
 export const ProductDetailsPage = () => {
-  // const { allProducts } = useContext(ShopContext);
   const { productId } = useParams();
-  // const product = allProducts.find((p) => p.id === +productId);
 
   const {
     data: product,
@@ -20,14 +21,20 @@ export const ProductDetailsPage = () => {
     enabled: !!productId,
   });
 
-  if (isLoading) return <div>Loading product details...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  if (isLoading) return <Loading text="Loading product details..." />;
+  if (isError)
+    return (
+      <LoadError text={`Error: ${error?.message || "Something went wrong"}`} />
+    );
+
   if (!product) return <div>No product found.</div>;
 
   return (
     <div>
       <div className="link-back">
-        <Link to={"/"}> {"< Back to Homepage"}</Link>
+        <Link to={"/"}>
+          <ArrowBackIcon className="link-back-home" />
+        </Link>
       </div>
       <div className="product-card-page">
         <div className="product-card-details">
@@ -44,12 +51,3 @@ export const ProductDetailsPage = () => {
     </div>
   );
 };
-
-// {Object.entries(product).map(([key, value]) => {
-//   if (typeof value === "object" || key === "image") return null;
-//   return (
-//     <div key={key} className="productPageDetails">
-//       <p>{key}:</p> <b>{String(value)}</b>
-//     </div>
-//   );
-// })}
