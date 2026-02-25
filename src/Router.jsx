@@ -3,9 +3,10 @@ import App from "./App";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
 import { useEffect, useState } from "react";
 import { ShopContext } from "./ShopContext";
-import StickyHeadTable from "./pages/ManageProductsPage";
 import { handleProducts } from "./api/products-functions";
 import { useQuery } from "@tanstack/react-query";
+import NotFoundPage from "./pages/NotFoundPage";
+import ManageProductsPage from "./pages/ManageProductsPage";
 
 export const Router = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -56,7 +57,7 @@ export const Router = () => {
       if (op === "+") {
         if (item) {
           return prevCart.map((p) =>
-            p._id === product._id ? { ...p, amount: p.amount + 1 } : p
+            p._id === product._id ? { ...p, amount: p.amount + 1 } : p,
           );
         } else {
           return [...prevCart, { ...product, amount: 1 }];
@@ -68,7 +69,7 @@ export const Router = () => {
 
         return prevCart
           .map((p) =>
-            p._id === product._id ? { ...p, amount: p.amount - 1 } : p
+            p._id === product._id ? { ...p, amount: p.amount - 1 } : p,
           )
           .filter((p) => p.amount > 0);
       }
@@ -88,7 +89,11 @@ export const Router = () => {
     },
     {
       path: "/manageProducts",
-      Component: StickyHeadTable,
+      Component: ManageProductsPage,
+    },
+    {
+      path: "*",
+      Component: NotFoundPage,
     },
   ]);
 
@@ -105,7 +110,7 @@ export const Router = () => {
         sortType,
         handleClickBtn,
         cart,
-        setCart
+        setCart,
       }}
     >
       <RouterProvider router={router} />
