@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { ShopContext } from "./ShopContext.js";
 import { NavSection } from "./components/NavSection";
 import { ProductsSection } from "./components/ProductsSection";
 

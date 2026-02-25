@@ -146,7 +146,6 @@ export default function CartDrawer() {
               Proceed to payment
             </Button>
           </Box>
-          {/* סיכום */}
         </Box>
       </Drawer>
     </>

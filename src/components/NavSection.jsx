@@ -12,9 +12,9 @@ export const NavSection = () => {
       <h1 className="nav-title">Products</h1>
 
       <div className="nav-right">
+        <RangeSlider />
         <div className="filters">
           <SortSection />
-          <RangeSlider />
         </div>
         <div className="homeBtns">
           <CartDrawer />

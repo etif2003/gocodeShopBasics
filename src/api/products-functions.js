@@ -12,7 +12,6 @@ export const handleProducts = async () => {
 };
 
 export const fetchSingleProduct = async (id) => {
-  // const response = await fetch(`https://fakestoreapi.com/products/${id}`);
   const response = await fetch(`${API_URL}/id/${id}`);
 
   if (!response.ok) throw new Error("Product not found");

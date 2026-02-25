@@ -19,7 +19,6 @@ export default function RangeSlider() {
   });
   const { setPriceRange } = useContext(ShopContext);
 
-
   const prices = allProducts.map((p) => p.price);
   const minPrice = prices.length ? Math.min(...prices) : 0;
   const maxPrice = prices.length ? Math.max(...prices) : 1000;
@@ -51,7 +50,7 @@ export default function RangeSlider() {
 
   return (
     <Box sx={{ width: 300 }}>
-      <label>FILTER BY PRICE RANGE:</label>
+      <label className="select-label">FILTER BY PRICE RANGE:</label>
 
       <Slider
         min={minPrice}
@@ -62,6 +61,17 @@ export default function RangeSlider() {
         getAriaValueText={rangeValuetext}
         disableSwap
       />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mt: 1,
+          fontSize: 14,
+        }}
+      >
+        <span>${rangeValue[0]}</span>
+        <span>${rangeValue[1]}</span>
+      </Box>
     </Box>
   );
 }
