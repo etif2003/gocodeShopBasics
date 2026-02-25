@@ -91,10 +91,10 @@ export const Router = () => {
       path: "/manageProducts",
       Component: ManageProductsPage,
     },
-    {
-      path: "*",
-      Component: NotFoundPage,
-    },
+    // {
+    //   path: "*",
+    //   Component: NotFoundPage,
+    // },
   ]);
 
   return (

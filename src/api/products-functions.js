@@ -1,12 +1,9 @@
 // const API_URL = "http://localhost:3000/api/products";
 const API_URL = "https://gocodeshopserver.onrender.com/api/products";
 
-
 export const handleProducts = async () => {
   // const response = await fetch("https://fakestoreapi.com/products");
-  const response = await fetch(
-    
-  );
+  const response = await fetch(API_URL);
   const data = await response.json();
 
   return data.map((product) => {
